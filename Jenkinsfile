@@ -25,10 +25,12 @@ pipeline {
     }
    stage('Deploy Image') {
       steps{
-        sh '''
-        docker tag testapp 127.0.0.1:5000/mguazzardo/testapp
-        docker push 127.0.0.1:5000/mguazzardo/testapp   
-        '''
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+          sh '''
+            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+            docker tag testapp gscaramuzza/testapp:latest
+            docker push gscaramuzza/testapp:latest
+          '''
         }
       }
     }
