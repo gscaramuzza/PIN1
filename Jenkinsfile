@@ -23,14 +23,15 @@ pipeline {
         sh "docker run testapp npm test"
       }
     }
-   stage('Deploy Image') {
-      steps{
-        withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
-          sh '''
-            echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-            docker tag testapp gscaramuzza/testapp:latest
-            docker push gscaramuzza/testapp:latest
-          '''
+    stage('Deploy Image') {
+        steps{
+          withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+            sh '''
+              echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+              docker tag testapp gscaramuzza/testapp:latest
+              docker push gscaramuzza/testapp:latest
+            '''
+          }
         }
       }
     }
